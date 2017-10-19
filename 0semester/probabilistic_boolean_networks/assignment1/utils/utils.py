@@ -25,7 +25,7 @@ def int_to_binary_array (n, x):
 
 # Returns a string representing the integer x with n or more characters
 def int_to_binary_string (n, x):
-    return "".join (int_to_binary_array (n, x).astype(str).tolist ())
+    return "".join (int_to_binary_array (n, x).astype (str).tolist ())
 
 
 # Prints a transition probability matrix in a latex array representation
