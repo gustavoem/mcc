@@ -28,9 +28,7 @@ P = get_alpha_beta_transition_p (n, M, alpha, beta)
 # Calculates stationary distribution 
 Pi_matrix = get_stationary_matrix (P) 
 stationary_distribution = Pi_matrix[0]
-# print (stationary_distribution)
 
 # Calculates flux matrix
 F = get_flux_matrix (stationary_distribution, P)
-
 print (F)

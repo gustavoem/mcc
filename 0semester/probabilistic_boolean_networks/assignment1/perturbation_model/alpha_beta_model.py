@@ -12,7 +12,7 @@ def calculate_H_i (i, M, x):
     return h
 
 
-# Calculates the probability o the gene's next state 
+# Calculates the probability of the gene's next state 
 def p_gen_change (i, x1, x2, M, alpha, beta):
     h = calculate_H_i (i, M, x1)
     p = 0
@@ -41,6 +41,8 @@ def p_transition (x1, x2, M, alpha, beta):
     return total_p
 
 
+# returns the transition matrix of the network modeled with alpha and
+# beta pertubation
 def get_alpha_beta_transition_p (n, M, alpha, beta):
     P = []
     for i in range (2 ** n):

@@ -18,4 +18,4 @@ for i in range (n):
 P = get_invertion_transition_p (n, M, p)
 
 print (P)
-print_latex_representation (P, n)
+# print_latex_representation (P, n)

@@ -10,6 +10,7 @@ def get_stationary_matrix (P):
     return Pkn
 
 
-# I used 1-norm to calculate the matrix norm here
+# I used matrix 1-norm to calculate the matrix norm here, which is 
+# taking the highest sum of elements of a column
 def my_norm (P):
     return np.linalg.norm (P, 1)

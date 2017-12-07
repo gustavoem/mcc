@@ -18,4 +18,4 @@ for i in range (n):
 P = get_alpha_beta_transition_p (n, M, alpha, beta)
 
 print (P)
-print_latex_representation (P, n)
+# print_latex_representation (P, n)
