@@ -1,4 +1,5 @@
 from predictor_set import *
+import random
 
 class GeneFunction ():
 
@@ -13,8 +14,26 @@ class GeneFunction ():
     ''' Checks compatibility with a state '''
     def check_compatibility (self, state):
         predictors_s = self._get_predictor_state_str (state)
-        print ("Predictor state: " + predictors_s)
-
+        gene_s = state.has_gene (self.gene)
+        if (predictors_s not in self.function):
+            self.function[predictors_s] = gene_s
+        else:
+            if (self.function[predictors_s] != gene_s):
+                return False
+        return True
+    
+    ''' Returns gene next state according to current state '''
+    def next_state (self, state):
+        predictors_s = self._get_predictor_state_str (state)
+        if (predictors_s in self.function):
+            gene_s = self.function[predictors_s]
+        else:
+            # this is the case where we complete the boolean functions
+            # randomly
+            gene_s = random.choice ([True, False]) 
+            self.function[predictors_s] = gene_s
+        return gene_s
+        
     
     ''' Given the system state and the predictor set, calculates the
         string of the predictor state '''

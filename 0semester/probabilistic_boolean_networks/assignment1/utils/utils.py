@@ -28,6 +28,18 @@ def int_to_binary_string (n, x):
     return "".join (int_to_binary_array (n, x).astype (str).tolist ())
 
 
+# Returns an integer that is represented by the string passed as 
+# argument
+def binary_string_to_int (s):
+    n = len (s)
+    p = 1
+    x = 0
+    for i in range (n - 1, -1, -1):
+        x += int (s[i]) * p
+        p *= 2
+    return x
+
+
 # Prints a transition probability matrix in a latex array representation
 def print_latex_representation (P, n):
     # Prints in latex table format
