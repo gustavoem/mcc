@@ -17,7 +17,7 @@ class StateDiagram ():
     def __str__ (self):
         s = ""
         for i in range (2 ** self.n):
-            s += int_to_binary_string (sef.n, i) + " -> " +
+            s += int_to_binary_string (sef.n, i) + " -> " + \
                  int_to_binary_string (self.n, self.edges[i]) + "\n"
         return s
 
@@ -31,19 +31,54 @@ class StateDiagram ():
     
     ''' Verifies if there's a cycle on the diagram '''
     def has_cycle (self):
-        S = [0]
-        marked = []
-        for i in range (2 ** self.n):
-            marked = False
+        S = []
+        # mark = -1 (not visited)
+        #         0 (visited and present on current branch)
+        #         1 (visited and not in the current branch)
+        mark = [-1] * (2 ** self.n)
         
         for i in range (2 ** self.n):
-            if (marked[i] == False):
+            if (mark[i]== -1):
                 S.append (i)
-            while (len (S)):
-                v = S.pop ()
-                if (marked[v]):
-                    return True
+            while (len (S) > 0):
+                v = S[-1]
+                mark[v] = 0
                 next_v = self.edges[v]
-                if (next_v != -1):
-                    S.append (next_v)
+                # print (int_to_binary_string (self.n, v) + " -> " + \
+                        # int_to_binary_string (self.n, next_v))
+                if (next_v == self.edges[next_v] or mark[next_v] == 1):
+                    break
+                if (mark[next_v] == 0): # return arc
+                    return True
+                else:
+                    if (mark[next_v] == -1):
+                        S.append (next_v)
+            while (len (S) > 0):
+                v = S.pop ()
+                mark[v] = 1
         return False
+    
+
+    ''' Calculates the maximum level of a state 
+        (distance to an attractor) '''
+    def max_level (self):
+        level = [-1] * (2 ** self.n)
+        S = []
+
+        for s in range (2 ** self.n):
+            while (level[s] == -1):
+                S.append (s)
+                s = self.edges[s] 
+                if (s == self.edges[s]):
+                    level[s] = 0
+            # inv: level[s] != -1 
+            while (len (S) > 0):
+                s_ant = S.pop ()
+                level[s_ant] = level[s] + 1
+                s = s_ant
+        
+        max_level = 0
+        for s in range (2 ** self.n):
+            if (level[s] > max_level):
+                max_level = level[s]
+        return max_level
