@@ -82,3 +82,41 @@ class StateDiagram ():
             if (level[s] > max_level):
                 max_level = level[s]
         return max_level
+
+
+    ''' Returns a dictionary with attractors as keys and basins sizes
+        as values '''
+    def get_basins (self):
+        visited = [False] * (2 ** self.n)
+        vertice_basins = [-1] * (2 ** self.n)
+        basins = {}
+        for i in range (2 ** self.n):
+            if (not visited[i]):
+                v = i
+                S = []
+                while (True):
+                    visited[v] = True
+                    next_v = self.edges[v]
+                    S.append (v)
+                    if (next_v == v):
+                        bstr = int_to_binary_string (self.n, v)
+                        if bstr not in basins:
+                            basins[bstr] = 0
+                        while (len (S) > 0):
+                            x = S.pop ()
+                            vertice_basins[x] = v
+                            basins[bstr] += 1
+                        break
+                    if (vertice_basins[next_v] != -1):
+                        att_v = vertice_basins[next_v]
+                        bstr = int_to_binary_string (self.n, att_v)
+                        while (len (S) > 0):
+                            x = S.pop ()
+                            vertice_basins[x] = att_v
+                            basins[bstr] += 1
+                        break
+                    v = next_v
+        return basins
+
+                        
+                

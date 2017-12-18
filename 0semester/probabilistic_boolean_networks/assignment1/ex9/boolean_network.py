@@ -49,3 +49,8 @@ class BooleanNetwork ():
         if (self.state_diagram == None):
             self.create_state_diagram ()
         return self.state_diagram
+
+
+    ''' Returns the basins of the BoolNet '''
+    def get_basins (self):
+        return self.state_diagram.get_basins ()
