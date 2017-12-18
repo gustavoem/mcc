@@ -3,6 +3,7 @@ from predictor_set import *
 from gene_function import *
 from boolean_network import *
 from state_diagram import *
+from pbn import *
 from random import randrange
 from sys import stdin
 from sys import exit
@@ -83,6 +84,13 @@ def gen_bn (n, attractors, bns):
     return found_bn
 
 
+def distribution_mse (dist1, dist2):
+    mse = 0.0
+    for att in dist1:
+        mse += (dist1[att] - dist2[att]) ** 2
+    return mse / (len (dist1))
+
+
 # Reads melanoma data
 obs = []
 obs_prop = {}
@@ -104,6 +112,7 @@ for line in stdin:
     else:
         obs_prop[state_str] += 1 
     total_obs += 1
+melanoma_attractors = list (obs_prop.keys ())
 
 for s in obs_prop:
     obs_prop[s] /= total_obs
@@ -149,7 +158,24 @@ for i in range (10):
                "increasing repetition parameters.")
         exit () 
 
-    basins = bns[i][-1].get_basins ()
-    print (basins)
-        # If we got here we succsessfully generated 100 BNs for the
-        # attractor set
+# PBN generation
+pbns = []
+for k in range (13):
+    pbn = PBN ()
+    for i in range (10):
+        r = randrange (0, len (bns[i]))
+        pbn.add_bn (bns[i][r])
+    pbns.append (pbn)
+
+minbn = 0
+minmse = distribution_mse (obs_prop, \
+        pbns[0].get_attractors_dist (melanoma_attractors))
+for i in range (1, len (pbns)):
+    mse = distribution_mse (obs_prop, \
+        pbns[i].get_attractors_dist (melanoma_attractors))
+    if (mse < minmse):
+        minmse = mse
+        minbn = i
+
+print ("Predicted prob: ")
+print (pbns[minbn].get_attractors_dist (melanoma_attractors))
