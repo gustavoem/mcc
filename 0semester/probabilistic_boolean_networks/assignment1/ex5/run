@@ -1,0 +1,3 @@
+#!/bin/sh
+
+python ex5.py < example1.txt

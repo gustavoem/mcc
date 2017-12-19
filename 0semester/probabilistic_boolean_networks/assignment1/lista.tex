@@ -298,5 +298,156 @@ a matriz que representa a rede e devolva a matriz de fluxo total.}
 \question{9}{Reproduza os resultados do paper "Generating 
 Boolean networks with a prescribed attractor structure".}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\textwidth]{ex9/results.png}
+\end{figure}
+
+\question{10}{Considere um modelo de rede Booleana para representar a
+saúde de um paciente que descreve o estado de dois genes. Suponha que 
+os estados 00 e 10 correspondem respectivamente ao paciente no estado
+saudável e doente. Dadas os diagramas abaixo, que representam 
+respectivamente a dinâmica dos genes quando o paciente não faz 
+tratamento e quando faz, dê a tabela de planejamento para uma janela
+de tempo de tamanho 3.}
+\begin{center}
+\begin{tikzpicture}[node distance=3cm]
+  \tikzstyle{state} = [circle, minimum width=20pt, draw, 
+  inner sep=0pt, text width=2em, text centered]
+    
+  % Define nodes
+  \node[state] (11) {11};
+  \node[state, right of=11] (01) {01};
+  \node[state, below of=01] (10) {10};
+  \node[state, below of=11] (00) {00};
+
+  \path [->] (11) edge node [above] {$0.5$} (01);
+  \path [->] (11) edge node [above left] {$0.5$} (00);
+  \path [->] (00) edge [loop below] node [below] {$1.0$} (00);
+  \path [->] (01) edge node [left] {$1.0$} (10);
+  \path [->] (10) edge [loop below] node [below] {$1.0$} (10);
+\end{tikzpicture}
+    \hspace{1cm}
+\begin{tikzpicture}[node distance=3cm]
+  \tikzstyle{state} = [circle, minimum width=20pt, draw, 
+  inner sep=0pt, text width=2em, text centered]
+    
+  % Define nodes
+  \node[state] (00) {00};
+  \node[state, right of=00] (10) {10};
+  \node[state, below of=10] (01) {01};
+  \node[state, below of=00] (11) {11};
+
+  \path 
+    [->] ([yshift=.1cm]00.east) edge node [above] {$1$} ([yshift=.1cm]10.west)
+    [->] ([yshift=-.1cm]10.west) edge node [below] {$0.7$} ([yshift=-.1cm]00.east)
+    [->] (11) edge [loop below] node [below] {$1.0$} (00)
+    [->] (01) edge node [above] {$0.3$} (11)
+    [->] ([xshift=.1cm]10.south) edge node [right] {$0.3$} ([xshift=.1cm]01.north)
+    [->] ([xshift=-.1cm]01.north) edge node [left] {$0.7$} ([xshift=-.1cm]10.south);
+\end{tikzpicture}
+\end{center}
+
+Primeiro, escolhemos o custo dos estados finais do sistema afim de 
+encontrar políticas que reduzem este custo.
+\begin{center}
+\begin{tabular}{c | c }
+ $X$ & $C_3(X)$ \\
+  \hline
+  $00$ & 10 \\
+  $01$ & 10000 \\
+  $10$ & 10000 \\
+  $11$ & 5000 \\
+\end{tabular}
+\end{center}
+
+Definimos $\mu_i$ como uma variável que indica se houve tratamento no
+tempo $i$, e também definimos uma função $J_i$ com os custos parciais 
+no tempo $i$.
+\begin{align*}
+  J_i (X_i, \mu = 1) & = 20 + 10 * i + E [J_{i + 1} (X_{i+1}) | X_i, \mu = 1] \\
+  J_i (X_i, \mu = 0) & = 10 + E [J_{i + 1} (X_{i+1}) | X_i, \mu = 0] \\
+  J_i (X_i) &= min\{ J_i (X_i, \mu = 0), J_i (X_i, \mu = 1)\}
+\end{align*}
+Também definimos $J_3 (X) = C_3  (X)$ e $u_i^*(X_i)$ como $1$ se 
+$J_i (X_i, \mu = 0) > J_i (X_i, \mu = 1)$ e como $0$ caso contrário. 
+
+Desta maneira, temos que:
+\begin{itemize}
+  \item{No tempo $i = 2$}
+  \begin{align*}
+    &J_2 (00, \mu = 0) = 10 + 1.0 * J_3 (00) = 20 \\
+    &J_2 (00, \mu = 1) = 40 + 1.0 * J_3 (10) = 10040  \\
+    &\text{portanto, } J_2 (00) = 20 \text{ e } \mu_2^* (00) = 0\\
+    &\\
+    &J_2 (01, \mu = 0) = 10 + 1.0 * J_3 (10) = 10010 \\
+    &J_2 (01, \mu = 1) = 40 + 0.7 * J_3 (10) + 0.3 * J_3 (11) = 8540 \\
+    &\text{portanto, } J_2 (01) = 8450 \text{ e } \mu_2^* (01) = 1\\
+    &\\
+    &J_2 (10, \mu = 0) = 10 + 1.0 * J_3 (10) = 10010 \\
+    &J_2 (10, \mu = 1) = 40 + 0.7 * J_3 (00) + 0.3 * J_3 (01) = 3047 \\
+    &\text{portanto, } J_2 (10) = 3047 \text{ e } \mu_2^* (10) = 1\\
+    &\\
+    &J_2 (11, \mu = 0) = 10 + 0.5 * J_3 (01) + 0.5 * J_3 (00) =  5015\\
+    &J_2 (11, \mu = 1) = 40 + 1 * J_3 (11) = 5040 \\
+    &\text{portanto, } J_2 (11) = 5015 \text{ e } \mu_2^* (11) = 0\\
+    &\\
+  \end{align*}
+  
+  \item{No tempo $i = 1$}
+  \begin{align*}
+    &J_1 (00, \mu = 0) = 10 + 1.0 * J_2 (00) = 30 \\
+    &J_1 (00, \mu = 1) = 30 + 1.0 * J_2 (10) = 3077 \\
+    &\text{portanto, } J_1 (00) = 30 \text{ e } \mu_1^* (00) = 0\\
+    &\\
+    &J_1 (01, \mu = 0) = 10 + 1.0 * J_2 (10) = 3057 \\
+    &J_1 (01, \mu = 1) = 30 + 0.7 * J_2 (10) + 0.3 * J_2 (11) = 3667.4 \\
+    &\text{portanto, } J_1 (01) = 3057 \text{ e } \mu_1^* (01) = 0\\
+    &\\
+    &J_1 (10, \mu = 0) = 10 + 1.0 * J_2 (10) = 3057 \\
+    &J_1 (10, \mu = 1) = 30 + 0.7 * J_2 (00) + 0.3 * J_2 (01) = 2579 \\
+    &\text{portanto, } J_1 (10) = 2579 \text{ e } \mu_1^* (10) = 1\\
+    &\\
+    &J_1 (11, \mu = 0) = 10 + 0.5 * J_2 (01) + 0.5 * J_2 (00) = 4245 \\
+    &J_1 (11, \mu = 1) = 30 + 1 * J_2 (11) =  5045 \\
+    &\text{portanto, } J_1 (11) = 4245 \text{ e } \mu_1^* (11) = 0\\
+    &\\
+  \end{align*}
+  
+\item{No tempo $i = 0$}
+  \begin{align*}
+    &J_0 (00, \mu = 0) = 10 + 1.0 * J_1 (00) = 40 \\
+    &J_0 (00, \mu = 1) = 20 + 1.0 * J_1 (10) = 2599 \\
+    &\text{portanto, } J_0 (00) = 40 \text{ e } \mu_0^* (00) = 0\\
+    &\\
+    &J_0 (01, \mu = 0) = 10 + 1.0 * J_1 (10) = 2589 \\
+    &J_0 (01, \mu = 1) = 20 + 0.7 * J_1 (10) + 0.3 * J_1 (11) = 3098.8 \\
+    &\text{portanto, } J_0 (01) = 2589 \text{ e } \mu_0^* (01) = 0\\
+    &\\
+    &J_0 (10, \mu = 0) = 10 + 1.0 * J_1 (10) = 2589 \\
+    &J_0 (10, \mu = 1) = 20 + 0.7 * J_1 (00) + 0.3 * J_1 (01) = 958.1 \\
+    &\text{portanto, } J_0 (10) = 958.1 \text{ e } \mu_0^* (10) = 1\\
+    &\\
+    &J_0 (11, \mu = 0) = 10 + 0.5 * J_1 (01) + 0.5 * J_1 (00) = 1553.5 \\
+    &J_0 (11, \mu = 1) = 20 + 1 * J_1 (11) =  4265 \\
+    &\text{portanto, } J_0 (11) = 1553.5 \text{ e } \mu_0^* (11) = 0\\
+    &\\
+  \end{align*}
+\end{itemize}
+
+Portanto, a tabela de planejamento é dada por:
+\[
+\begin{blockarray}{cccc}
+0 & 1 & 2 \\
+\begin{block}{(ccc)c}
+  0 & 0 & 0 & 00 \\
+  0 & 0 & 1 & 01 \\
+  1 & 1 & 1 & 10 \\
+  0 & 0 & 0 & 11 \\
+\end{block}
+\end{blockarray}
+\]
+
+
 \end{document}
 

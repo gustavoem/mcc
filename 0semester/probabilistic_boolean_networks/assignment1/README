@@ -1,0 +1,6 @@
+Os exercícios escritos estão no pdf, enquanto os de código estão na 
+pasta com o número do exercício correspondente. Para rodar os programas
+use o script "run" presente em cada uma das pastas.
+
+PS: os exercícios de códigos não são auto-contidos em suas pastas, pois
+alguns utilizam código implementado em ./perturbation_model.
