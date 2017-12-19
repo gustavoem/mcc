@@ -44,8 +44,6 @@ class StateDiagram ():
                 v = S[-1]
                 mark[v] = 0
                 next_v = self.edges[v]
-                # print (int_to_binary_string (self.n, v) + " -> " + \
-                        # int_to_binary_string (self.n, next_v))
                 if (next_v == self.edges[next_v] or mark[next_v] == 1):
                     break
                 if (mark[next_v] == 0): # return arc
