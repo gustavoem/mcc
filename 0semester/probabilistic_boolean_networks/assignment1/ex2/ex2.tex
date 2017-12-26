@@ -1,0 +1,124 @@
+\documentclass[12pt]{article}
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{setspace}
+\usepackage{boxedminipage}
+\usepackage{amsmath}
+\usepackage{latexsym}
+\usepackage{multirow}
+\usepackage[pdftex]{graphicx}
+\usepackage{float}
+\usepackage{url}
+\usepackage{tikz}
+\usetikzlibrary{bayesnet}
+\usepackage{blkarray}
+
+\renewcommand{\familydefault}{\sfdefault}
+\newcommand{\question}[2] {\vspace{0.3in}\noindent{\subsection*{Exercício #1. #2} \vspace{0.15in}}}
+\renewcommand{\part}[1] {{\vspace{0.15in}\noindent\textbf (#1)} \vspace{0.10in}}
+\newcommand{\answer}[1]{{\fontfamily{\rmdefault}\selectfont \textbf{R:} #1}}
+\newcommand{\overbar}[1]{\mkern 2mu\overline{\mkern-2mu#1\mkern-2mu}\mkern 2mu}
+
+%\setlength{\parskip}{0.1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{23.0cm}
+\setlength{\textwidth}{16.5cm}
+\setlength{\oddsidemargin}{0.0cm}
+\setlength{\topmargin}{-1.0cm}
+\pagestyle{empty}
+
+
+\begin{document}
+\title{Lista de exercícios de Introdução à Redes Booleanas Probabilisticas}
+\author{\large Gustavo Estrela de Matos}
+\date{\today}
+\maketitle
+
+
+\question{2}{Monte a tabela de probabilidade condicional para a rede do
+exercício 1 usando o modelo de PBNs de $\alpha$s e $\beta$s}
+\answer {
+
+Para $x_1$:
+
+$\begin{array}{cc | c | c}
+    x_1 (t) &  x_3 (t) &  P (x_1 (t + 1) = 0 | x_1 (t), x_3 (t)) 
+                       &  P (x_1 (t + 1) = 1 | x_1 (t), x_3 (t))\\
+    \hline
+    X     &     1    &     
+                          \frac{e^{\beta}}{e^{\beta} + e^{-\beta}} &
+                          \frac{e^{-\beta}}{e^{\beta} + e^{-\beta}} \\
+    0     &     0    &     
+                          \frac{1}{1 + e^{-\alpha}} & 
+                          \frac{e^{-\alpha}}{1 + e^{-\alpha}} \\
+    1     &     0    &    
+                          \frac{e^{-\alpha}}{1 + e^{-\alpha}} & 
+                          \frac{1}{1 + e^{-\alpha}} \\
+\end{array}$
+
+\bigbreak
+Para $x_2$:
+
+$\begin{array}{ccc | c | c}
+    x_2 (t) &  x_1 (t) & x_4 (t) 
+                       & P (x_2 (t + 1) = 0 | x_1 (t), x_2 (t), x_4 (t)) 
+                       & P (x_2 (t + 1) = 1 | x_1 (t), x_2 (t), x_4 (t))\\
+    \hline
+    X     &     1      & 0 
+                       & \frac{e^{-\beta}}{e^{\beta} + e^{-\beta}} 
+                       & \frac{e^{\beta}}{e^{\beta} + e^{-\beta}} \\
+    X     &     0      & 1  
+                       & \frac{e^{\beta}}{e^{\beta} + e^{-\beta}} 
+                       & \frac{e^{-\beta}}{e^{\beta} + e^{-\beta}} \\
+    0     &     0      & 0
+                       & \frac{1}{1 + e^{-\alpha}} 
+                       & \frac{e^{-\alpha}}{1 + e^{-\alpha}} \\
+    1     &     0      & 0
+                       & \frac{e^{-\alpha}}{1 + e^{-\alpha}} 
+                       & \frac{1}{1 + e^{-\alpha}} \\
+    0     &     1      & 1
+                       & \frac{1}{1 + e^{-\alpha}} 
+                       & \frac{e^{-\alpha}}{1 + e^{-\alpha}} \\
+    1     &     1      & 1
+                       & \frac{e^{-\alpha}}{1 + e^{-\alpha}} 
+                       & \frac{1}{1 + e^{-\alpha}} \\
+\end{array}$
+
+Para $x_3$:
+
+$\begin{array}{cc | c | c}
+    x_3 (t) &  x_2 (t) &  P (x_3 (t + 1) = 0 | x_2 (t), x_3 (t)) 
+                       &  P (x_3 (t + 1) = 1 | x_2 (t), x_3 (t))\\
+    \hline
+    X     &     1    &     
+                          \frac{e^{-\beta}}{e^{\beta} + e^{-\beta}} &
+                          \frac{e^{\beta}}{e^{\beta} + e^{-\beta}} \\
+    0     &     0    &     
+                          \frac{1}{1 + e^{-\alpha}} & 
+                          \frac{e^{-\alpha}}{1 + e^{-\alpha}} \\
+    1     &     0    &    
+                          \frac{e^{-\alpha}}{1 + e^{-\alpha}} & 
+                          \frac{1}{1 + e^{-\alpha}} \\
+\end{array}$
+
+\bigbreak
+
+Para $x_4$:
+
+$\begin{array}{cc | c | c}
+    x_4 (t) &  x_3 (t) &  P (x_4 (t + 1) = 0 | x_3 (t), x_4 (t)) 
+                       &  P (x_4 (t + 1) = 1 | x_3 (t), x_4 (t))\\
+    \hline
+    X     &     1    &     
+                          \frac{e^{-\beta}}{e^{\beta} + e^{-\beta}} &
+                          \frac{e^{\beta}}{e^{\beta} + e^{-\beta}} \\
+    0     &     0    &     
+                          \frac{1}{1 + e^{-\alpha}} & 
+                          \frac{e^{-\alpha}}{1 + e^{-\alpha}} \\
+    1     &     0    &    
+                          \frac{e^{-\alpha}}{1 + e^{-\alpha}} & 
+                          \frac{1}{1 + e^{-\alpha}} \\
+\end{array}$
+}
+\end{document}
+
