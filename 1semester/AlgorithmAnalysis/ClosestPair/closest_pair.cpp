@@ -58,7 +58,7 @@ float pair_dist (float * Px, float * Py, unsigned int i, unsigned int j)
 {
     float dx = Px[i] - Px[j];
     float dy = Py[i] - Py[j];
-    return sqrt (dx * dx + dy * dy);
+    return sqrtf (dx * dx + dy * dy);
 }
 
 
@@ -205,20 +205,32 @@ float closest_pair (float * Px, float * Py, unsigned int p,
 int main ()
 {
     unsigned int n;
-    float * Px, *Py;
+    float * Px, *Py, answ;
 
-    cin >> n;
-    Px = new float[n];
-    Py = new float[n];
+    while (true)
+    {
+        cin >> n;
 
-    for (unsigned int i = 0; i < n; i++)
-        cin >> Px[i];
-    for (unsigned int i = 0; i < n; i++)
-        cin >> Py[i];
+        if (n == 0)
+            break;
 
-    cout << closest_pair (Px, Py, 0, n) << endl;
+        Px = new float[n];
+        Py = new float[n];
 
-    delete[] Px;
-    delete[] Py;
+        for (unsigned int i = 0; i < n; i++)
+        {
+            cin >> Px[i];
+            cin >> Py[i];
+        }
+
+        answ = closest_pair (Px, Py, 0, n);
+        if (answ != -1 && answ < 10000)
+            cout << answ << endl;
+        else
+            cout << "INFINITY" << endl;
+
+        delete[] Px;
+        delete[] Py;
+    }
     return 0;
 }

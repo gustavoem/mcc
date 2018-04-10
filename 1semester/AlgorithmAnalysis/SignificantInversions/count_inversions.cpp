@@ -16,7 +16,7 @@ void sort_combine (int * list, unsigned int p, unsigned int q,
     i = p;
     j = q;
     k = p;
-    while (i < q && j < r)
+    while (k < r)
     {
         if (list_cpy[i - p] <= list_cpy[j - p])
             list[k++] = list_cpy[i++ - p];
@@ -24,10 +24,10 @@ void sort_combine (int * list, unsigned int p, unsigned int q,
             list[k++] = list_cpy[j++ - p];
     }
 
-    while (i < q) 
-        list[k++] = list_cpy[i++ - p];
-    while (j < r)
-        list[k++] = list_cpy[j++ - p];
+    //while (i < q) 
+        //list[k++] = list_cpy[i++ - p];
+    //while (j < r)
+        //list[k++] = list_cpy[j++ - p];
 
     delete[] list_cpy;
 }
