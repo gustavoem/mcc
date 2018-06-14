@@ -44,27 +44,32 @@ def boyermoore (p, t):
     m = len (p) - 1
     n = len (t) - 1
     v1 = v1_calc (p)
+    v2 = v2_calc (p)
     occurs = 0
     k = m
     while (k <= n):
         i = m
         j = k
-        print ("matching " +  "".join (t[j-m + 1:j+1]) + " with " + p[1:])
         while (i >= 1 and p[i] == t[j]):
             i -= 1
             j -= 1
-        print ("saiu com i = " + str (i))
         if (i < 1):
             occurs += 1
         if (k >= n):
             return occurs
-        print ("Next step based on " + t[k + 1]) 
-        print ("Skept " + str (m - v1[ord (t[k + 1])] + 1))
-        k += m - v1[ord (t[k + 1])] + 1  
+        if (i == m):
+            skip_v2 = 1
+        else:
+            skip_v2 = m - v2[i + 1]
+        skip_v1 = m - v1[ord (t[k + 1])] + 1
+
+        if (skip_v1 > skip_v2):
+            k += skip_v1
+        else:
+            k += skip_v2
     return occurs
 
 
 p = '*CAABAA'
 t = '*AsscCAABACAABAACAABAAAccCaaAAsdfBAAaACCAABAACACAABAA'
-print (t)
 print (boyermoore(p, t))
