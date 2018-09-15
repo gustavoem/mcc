@@ -5,8 +5,10 @@ import './index.css';
 class Square extends React.Component {
     render () {
         return (
-            <button className="square">
-            {/* TODO */}
+            //<button className="square" onClick={function () {console.log ("clicked button")}}>
+            <button className="square" onClick={() => console.log ("clicked button")}>
+                {this.props.value}
+
             </button>
         );
     }
@@ -15,7 +17,7 @@ class Square extends React.Component {
 
 class Board extends React.Component {
     renderSquare (i) {
-        return <Square />;
+        return <Square value={i} board={this}/>;
     }
 
     render () {
@@ -98,7 +100,6 @@ class Game extends React.Component {
         return (
             <div className="game">
             <div className="game-board">
-            <ShoppingList name="Mark" surname="Zuremberg"/>
             <Board />
             </div>
             <div className="game-info">
