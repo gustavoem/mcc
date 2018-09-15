@@ -3,12 +3,20 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
+    constructor (props) {
+        super (props);
+        this.state = {
+            value: null,
+        }
+    }
+
     render () {
         return (
+            // Both next nefinitions are equivalent.
             //<button className="square" onClick={function () {console.log ("clicked button")}}>
-            <button className="square" onClick={() => console.log ("clicked button")}>
-                {this.props.value}
-
+            //<button className="square" onClick={() => console.log ("clicked button")}>
+            <button className="square" onClick={() => this.setState ({value: 'X'})}>
+                {this.state.value}
             </button>
         );
     }
@@ -46,9 +54,9 @@ class Board extends React.Component {
 }
 
 
-class ShoppingList extends React.Component {
-    render () {
-        return (
+//class ShoppingList extends React.Component {
+    //render () {
+        //return (
             //<div className="shopping-list">
             //<h1>{this.props.length }</h1>
             //<h1>Shopping List for {this.props.name}</h1>
@@ -61,38 +69,38 @@ class ShoppingList extends React.Component {
 
             // This is the code above is translated to the code bellow.
             // Most programmers use the above because of its simplicity.
-            React.createElement(
-                "div",
-                { className: "shopping-list" },
-                React.createElement(
-                    "h1",
-                    null,
-                    "Shopping List for ",
-                    this.props.name
-                ),
-                React.createElement(
-                    "ul",
-                    null,
-                    React.createElement(
-                        "li",
-                        null,
-                        "Instagram"
-                        ),
-                    React.createElement(
-                        "li",
-                        null,
-                        "WhatsApp"
-                        ),
-                    React.createElement(
-                        "li",
-                        null,
-                        "Oculus"
-                    )
-                )
-            )
-        );
-    }
-}
+            //React.createElement(
+                //"div",
+                //{ className: "shopping-list" },
+                //React.createElement(
+                    //"h1",
+                    //null,
+                    //"Shopping List for ",
+                    //this.props.name
+                //),
+                //React.createElement(
+                    //"ul",
+                    //null,
+                    //React.createElement(
+                        //"li",
+                        //null,
+                        //"Instagram"
+                        //),
+                    //React.createElement(
+                        //"li",
+                        //null,
+                        //"WhatsApp"
+                        //),
+                    //React.createElement(
+                        //"li",
+                        //null,
+                        //"Oculus"
+                    //)
+                //)
+            //)
+        //);
+    //}
+//}
 
 
 class Game extends React.Component {
