@@ -1,0 +1,18 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata: 
+  name: hello-world
+spec: 
+  replicas: 1
+  template: 
+    metadata: 
+      labels: 
+        app: hello-world
+    spec: 
+      containers: 
+        - image: "gcr.io/secretarias-215411/quickstart-image"
+          imagePullPolicy: Always
+          name: hello-world-container
+          ports: 
+            - containerPort: 8080
+
