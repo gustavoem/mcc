@@ -2,11 +2,12 @@ import os
 import re
 
 models = ['model1', 'model2', 'model3', 'model4']
-parameters = {'model1': ['compartment', 'k1', 'k1', 'k2', 'k1', 'V', 
-    'Km'],
-    'model2': ['compartment', 'k1', 'V', 'Km', 'Km', 'V'],
-    'model3': ['compartment', 'V', 'Km', 'Km', 'V'],
-    'model4': ['compartment', 'k1', 'k1', 'k2', 'k1', 'k1', 'k2', 'k1']
+parameters = {'model1': ['compartment', 'k_1', 'k_2', 'k_3', 'k_4', 'V', 
+    'K_m'],
+    'model2': ['compartment', 'k_1', 'V_1', 'k_2', 'k_3', 'V_2'],
+    'model3': ['compartment', 'V_1', 'k_1', 'V_2', 'k_2'],
+    'model4': ['compartment', 'k_1', 'k_2', 'k_3', 'k_4', 'k_5', 'k_6', 
+        'k_7']
 }
 
 output_file = 'bioinformatics_gamma_abc_results.txt'

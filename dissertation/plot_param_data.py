@@ -37,14 +37,34 @@ class FullSample:
         return self.model_params[model]
 
 
-def plot_parameter_distribution (param_sample, param_name, fig_name):
+def plot_parameter_distribution (plot_title, param_sample, param_name, 
+        fig_name, extra_tick=None):
     x = np.array (param_sample)
-    sns_plot = sns.kdeplot (x, label=param_name)
+    tex_param_name = '$' + param_name + '$'
+    sns_plot = sns.distplot (x, label=tex_param_name, hist=False, 
+            rug=True)
     fig = sns_plot.get_figure ()
-    plt.legend ()
+    
+    # Add parameter to the ticks
+    # Must draw the canvas to position the ticks
+    fig.canvas.draw()
+    if extra_tick is not None:
+        locs, labels = plt.xticks ()
+        locs = list (locs) + [extra_tick]
+        labels += tex_param_name
+        plt.xticks (locs, labels)
+        _, labels = plt.xticks ()
+        my_label = labels[-1]
+        _, position_y = my_label.get_position ()
+        my_label.set_y (position_y - .02)
+
+    plt.title (plot_title)
+    plt.ylabel ('Estimated $p (' + param_name + '|M, D)$')
+    plt.xlabel ('Paramater value')
     fig.savefig (fig_name)
     plt.clf ()
 
+param_original_value = [1.3, 1.3, 1.3, 1.3, 1.3, 1.3]
 
 # Process data
 f = open (data_file, 'r')
@@ -69,10 +89,18 @@ full_sample = sample_obj.get_full_sample ()
 for model in all_models:
     parameters = sample_obj.get_model_params (model)
     sample = sample_obj.get_model_sample (full_sample, model)
-    # sample = sample_obj.get_iteration_sample (sample, 2)
+    sample = [s for s in sample]
+    model_idx = all_models.index (model)
     
     for p in parameters:
         p_idx = parameters.index (p)
         param_sample = [obs[2 + p_idx] for obs in sample]
         fig_name = model + '_p' + str (p_idx) + '_' + p + '.png'
-        plot_parameter_distribution (param_sample, p, fig_name)
+        extra_tick = None
+        if model == 'model1':
+            extra_tick = param_original_value[p_idx]
+        
+        plot_title = 'Estimated posterior of parameter $' + p + '$ of' \
+                + ' model ' + str (model_idx + 1)
+        plot_parameter_distribution (plot_title, param_sample, p, 
+                fig_name, extra_tick)
