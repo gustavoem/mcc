@@ -66,7 +66,7 @@ def plot_parameter_distribution (plot_title, param_sample, param_name,
     fig.savefig (fig_name)
     plt.clf ()
 
-param_original_value = [1.3, 1.3, 1.3, 1.3, 1.3, 1.3]
+param_original_value = [0.07, 0.6, 0.05, 0.3, 0.017, 0.3]
 
 # Process data
 f = open (data_file, 'r')
