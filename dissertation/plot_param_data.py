@@ -41,6 +41,10 @@ def plot_parameter_distribution (plot_title, param_sample, param_name,
         fig_name, extra_tick=None):
     x = np.array (param_sample)
     tex_param_name = '$' + param_name + '$'
+    plt.title (plot_title)
+    plt.ylabel ('Estimated $p (' + param_name + '|M, D)$')
+    plt.xlabel ('Paramater value')
+
     sns_plot = sns.distplot (x, label=tex_param_name, hist=False, 
             rug=True)
     fig = sns_plot.get_figure ()
@@ -51,16 +55,14 @@ def plot_parameter_distribution (plot_title, param_sample, param_name,
     if extra_tick is not None:
         locs, labels = plt.xticks ()
         locs = list (locs) + [extra_tick]
-        labels += tex_param_name
+        labels += [tex_param_name]
         plt.xticks (locs, labels)
         _, labels = plt.xticks ()
         my_label = labels[-1]
         _, position_y = my_label.get_position ()
-        my_label.set_y (position_y - .02)
+        my_label.set_y (position_y - .05)
 
-    plt.title (plot_title)
-    plt.ylabel ('Estimated $p (' + param_name + '|M, D)$')
-    plt.xlabel ('Paramater value')
+    plt.tight_layout ()
     fig.savefig (fig_name)
     plt.clf ()
 

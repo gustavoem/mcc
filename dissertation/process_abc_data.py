@@ -10,7 +10,7 @@ parameters = {'model1': ['compartment', 'k_1', 'k_2', 'k_3', 'k_4', 'V',
         'k_7']
 }
 
-output_file = 'bioinformatics_gamma_abc_results.txt'
+output_file = 'bioinformatics_log_abc_results.txt'
 out = open (output_file, 'w')
 
 current_dir = os.getcwd ()
@@ -36,7 +36,12 @@ for m in models:
     for pop in all_pop_names:
         pop_num = pop_number_regex.match (pop).group (1)
         pop_dir = current_dir + '/results_' + m + '/' + pop
-        f = open (pop_dir + '/data_Population' + str (pop_num) + '.txt')
+        
+        try:
+            f = open (pop_dir + '/data_Population' + str (pop_num) + '.txt')
+        except:
+            continue
+
         for line in f:
             v = line.split ()
             # removing compartments 
