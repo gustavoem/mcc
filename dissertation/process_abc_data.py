@@ -10,7 +10,7 @@ parameters = {'model1': ['compartment', 'k_1', 'k_2', 'k_3', 'k_4', 'V',
         'k_7']
 }
 
-output_file = 'bioinformatics_log_abc_results.txt'
+output_file = 'bioinformatics_abc_results.txt'
 out = open (output_file, 'w')
 
 current_dir = os.getcwd ()
