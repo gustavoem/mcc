@@ -51,9 +51,12 @@ def plot_parameter_distribution (plot_title, param_sample, param_name,
     plt.title (plot_title)
     plt.ylabel ('Estimated $p (' + param_name + '|M, D)$')
     plt.xlabel ('Paramater value')
-
-    sns_plot = sns.distplot (x, label=tex_param_name, hist=False, 
+    
+    try:
+        sns_plot = sns.distplot (x, label=tex_param_name, hist=False, 
             rug=True)
+    except:
+        return
     fig = sns_plot.get_figure ()
     
     # Add parameter to the ticks
@@ -104,7 +107,8 @@ for model in [all_models[0]]:
     
     for i in range (len (all_temp)):
         temp = all_temp[i]
-        t_sample = sample_obj.get_iteration_sample (sample, temp)[-10:]
+        print ("Plotting parameters with temperature " + str (temp))
+        t_sample = sample_obj.get_iteration_sample (sample, temp)[-20:]
 
         for p in parameters:
             p_idx = parameters.index (p)
