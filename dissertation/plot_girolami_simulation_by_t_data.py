@@ -64,7 +64,32 @@ class FullSample:
         return self.model_params[model]
 
 
-def plot_simulations (plot_title, exp_measure, exp_observations, 
+def plot_multiple_simulations (plot_title, exp_measure, 
+        exp_observations, sims, times, figname):
+    fig, ax = plt.subplots()
+    
+    # plot experiments
+    i = 1
+    for obs in exp_observations:
+        label = 'Experimental observation #' + str (i)
+        ax.plot(times, obs, label=label)
+        i += 1
+
+    # i = 1
+    ax.plot (times, sims[0], c=(1, 0.25, 0.25, 0.3), 
+            label='Simulated observation')
+    for sim in sims[1:]:
+        ax.plot (times, sim, c=(1, 0.25, 0.25, 0.3))
+
+    plt.title (plot_title)
+    plt.ylabel ('$' + exp_measure + '$')
+    plt.xlabel ('Time')
+    ax.legend ()
+    fig.savefig (figname)
+    plt.clf ()
+
+
+def plot_simulations_mean (plot_title, exp_measure, exp_observations, 
         sim_mean, sim_std, times, figname):
     fig, ax = plt.subplots()
     
@@ -107,7 +132,7 @@ param_odes_names = {
         'model1': ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'],
         'model2': ['p1', 'p2', 'p3', 'p4', 'p5'],
         'model3': ['p1', 'p2', 'p3', 'p4'],
-        'model4': ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8']
+        'model4': ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7']
 }
 
 experiment_file = 'experiment.data'
@@ -132,17 +157,16 @@ for model in models:
     sbml.load_file (model + '.xml')
     odes = sbml_to_odes (sbml)
     odes.print_equations ()
+    print ("Model: " + model)
     
     model_sample = sample_obj.get_model_sample (all_sample, model)
-    # if model == 'model1':
-        # model_sample.append ([0, 1, 0.07, 0.6, 0.05, 0.3, 0.017, 
-            # 0.3])
     for temp in all_temperature:
+        print ("Temperature: " + str (temp))
         sample = sample_obj.get_iteration_sample (model_sample, temp)
-        sample = sample[-10:]
         temp_simulations = []
         for obs in sample:
-            for i in range (len (param_odes_names[model]) - 2):
+            # print (obs)
+            for i in range (len (param_odes_names[model])):
                 p_name = param_odes_names[model][i]
                 p_value = obs[2 + i]
                 odes.define_parameter (p_name, p_value)
@@ -152,18 +176,24 @@ for model in models:
             temp_simulations.append (simulation)
         simulation_data[model].append (temp_simulations)
 
+
 # Plot simulations!
 all_iterations = sample_obj.get_all_iterations () 
 for model in models:
     t = len (experiment_times)
     for j in range (len (simulation_data[model])):
         temp = all_temperature[j]
-        print (temp)
         simulations = np.array (simulation_data[model][j])
         sim_mean = [np.mean (simulations[:, i]) for i in range (t)]
         sim_std = [np.std (simulations[:, i]) for i in range (t)]
+    
         figname = 'simulations_' + model + '_' + str (j) + '.png'
         plot_title = ''
-        plot_simulations (plot_title, experiment_measure, 
+        plot_simulations_mean (plot_title, experiment_measure, 
                 experiment_observations, sim_mean, sim_std, 
                 experiment_times, figname)
+
+        figname = 'msimulations_' + model + '_' + str (j) + '.png'
+        plot_multiple_simulations (plot_title, experiment_measure, 
+                experiment_observations, simulations,experiment_times, 
+                figname)
