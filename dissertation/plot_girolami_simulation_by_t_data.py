@@ -165,7 +165,7 @@ for model in models:
         sample = sample_obj.get_iteration_sample (model_sample, temp)
         temp_simulations = []
         for obs in sample:
-            # print (obs)
+            # print (obs[:2])
             for i in range (len (param_odes_names[model])):
                 p_name = param_odes_names[model][i]
                 p_value = obs[2 + i]
@@ -174,26 +174,40 @@ for model in models:
             simulation = odes.evaluate_exp_on (experiment_measure, 
                     experiment_times)
             temp_simulations.append (simulation)
-        simulation_data[model].append (temp_simulations)
+            if model == 'model2' and temp == 1:
+                print ("Adding simulation from parameters: " + str (obs))
+
+        
+        simulation_data[model].append ((temp, temp_simulations))
+        if model == 'model2' and temp == 1:
+            print ("Adding simulation: " + str (temp_simulations))
+            print ("size of simulation: " + str (len (temp_simulations)))
+            print ("Temp focker = " + str (temp))
+        
 
 
 # Plot simulations!
 all_iterations = sample_obj.get_all_iterations () 
 for model in models:
-    t = len (experiment_times)
+    n_time = len (experiment_times)
     for j in range (len (simulation_data[model])):
-        temp = all_temperature[j]
-        simulations = np.array (simulation_data[model][j])
-        sim_mean = [np.mean (simulations[:, i]) for i in range (t)]
-        sim_std = [np.std (simulations[:, i]) for i in range (t)]
+        temp, simulations = simulation_data[model][j]
+        if simulations == []:
+            continue
+
+        simulations = np.array (simulations)
+        sim_mean = [np.mean (simulations[:, i]) for i in range (n_time)]
+        sim_std = [np.std (simulations[:, i]) for i in range (n_time)]
     
-        figname = 'simulations_' + model + '_' + str (j) + '.png'
+        figname = 'simulations_' + model + '_' + str (int (temp)) + \
+                '.png'
         plot_title = ''
         plot_simulations_mean (plot_title, experiment_measure, 
                 experiment_observations, sim_mean, sim_std, 
                 experiment_times, figname)
 
-        figname = 'msimulations_' + model + '_' + str (j) + '.png'
+        figname = 'msimulations_' + model + '_' + str (int (temp)) + \
+                '.png'
         plot_multiple_simulations (plot_title, experiment_measure, 
                 experiment_observations, simulations,experiment_times, 
                 figname)
