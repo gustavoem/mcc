@@ -86,7 +86,7 @@ param_odes_names = {
         'model1': ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'],
         'model2': ['p1', 'p2', 'p3', 'p4', 'p5'],
         'model3': ['p1', 'p2', 'p3', 'p4'],
-        'model4': ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8']
+        'model4': ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7']
 }
 
 experiment_file = 'experiment.data'
@@ -118,8 +118,8 @@ for model in models:
         # model_sample.insert (0, [0, 1, 0.07, 0.6, 0.05, 0.3, 0.017, 
             # 0.3])
 
-    for obs in model_sample[-10:]:
-        for i in range (len (param_odes_names[model]) - 2):
+    for obs in model_sample:
+        for i in range (len (param_odes_names[model])):
             p_name = param_odes_names[model][i]
             p_value = obs[2 + i]
             odes.define_parameter (p_name, p_value)
