@@ -76,7 +76,7 @@ def plot_parameter_distribution (plot_title, param_sample, param_name,
     fig.savefig (fig_name)
     plt.clf ()
 
-param_original_value = [0.07, 0.6, 0.05, 0.3, 0.017, 0.3]
+param_original_value = [1.7e-4, 0.4, 2, 1.64e3, 1, 1.07e2]
 
 # Process data
 f = open (data_file, 'r')
@@ -119,7 +119,8 @@ for model in [all_models[0]]:
             if model == 'model1':
                 extra_tick = param_original_value[p_idx]
             
-            plot_title = 'Estimated posterior of parameter $' + p + '$ of' \
+            plot_title = 'Estimated posterior of iteration ' + \
+                    str (int (temp)) + ' of parameter $' + p + '$ of' \
                     + ' model ' + str (model_idx + 1)
             plot_parameter_distribution (plot_title, param_sample, p, 
                 fig_name, extra_tick)

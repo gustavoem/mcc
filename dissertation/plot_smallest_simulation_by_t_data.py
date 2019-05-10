@@ -130,9 +130,9 @@ for line in f:
 print ("All models: " + str (sample_obj.get_all_models ()))
 param_odes_names = {
         'model1': ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'],
-        'model2': ['p1', 'p2', 'p3', 'p4', 'p5'],
-        'model3': ['p1', 'p2', 'p3', 'p4'],
-        'model4': ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7']
+        'model2': ['p1', 'p2', 'p3', 'p4'],
+        'model3': ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8'],
+        'model4': ['p1', 'p2', 'p3', 'p4', 'p5', 'p6']
 }
 
 experiment_file = 'experiment.data'
