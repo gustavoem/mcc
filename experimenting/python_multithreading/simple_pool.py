@@ -3,7 +3,6 @@
 
 from multiprocessing import Pool
 from multiprocessing.dummy import Pool as ThreadPool
-import urllib.request as urlrequest
 import random
 import numpy
 
