@@ -39,12 +39,14 @@ int main(int argc, char** argv)
     int flag, k;
 
     N_Vector y = NULL;
+    N_Vector yout = NULL;
     void* cvode_mem = NULL;
     SUNMatrix J;
     SUNLinearSolver LS;
     
     // 3. Set vector of initial values
     y = N_VNew_Serial(2);
+    yout = N_VNew_Serial(2);
     NV_Ith_S(y, 0) = theta0;
     NV_Ith_S(y, 1) = 1;
 
@@ -106,8 +108,6 @@ int main(int argc, char** argv)
     // In loop, call CVode, print results and test for error.
     for (k = 1; k < 10; ++k) {
         realtype tout = k * Tfinal / N;
-        N_Vector yout = N_VNew_Serial(2);
-
         flag = CVode (cvode_mem, tout, yout, &t, CV_NORMAL);
         if (flag) {
             fprintf (stderr, "Error in CVode: %d\n", flag);
@@ -116,8 +116,14 @@ int main(int argc, char** argv)
         printf("%g %.16e %.16e\n", t, NV_Ith_S(yout, 0), 
                 NV_Ith_S(yout, 1));
         printf("exp(%.3f) = %.3f\n\n", t, exp (t));
+        
     }
+
+    // Free all memory used
     N_VDestroy_Serial(y);
+    N_VDestroy_Serial(yout);
     CVodeFree(&cvode_mem);
+    SUNLinSolFree(LS);
+    SUNMatDestroy(J);
     return 0;
 }
