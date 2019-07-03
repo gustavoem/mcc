@@ -19,13 +19,14 @@ static int f(realtype t, N_Vector y, N_Vector ydot, void *f_data)
 {
     // NV_Ith_S is a macro that allows us to access the components of 
     // data using standard indexing (starting from 0).
-    NV_Ith_S(ydot,0) = NV_Ith_S(y,0);
-    NV_Ith_S(ydot,1) = NV_Ith_S(y,1);
+    float *param_data = f_data;
+    NV_Ith_S(ydot,0) = NV_Ith_S(y,0) * param_data[1];
+    NV_Ith_S(ydot,1) = NV_Ith_S(y,1) * param_data[2];
     return 0;
 }
 
 
-int main(int argc, char** argv) 
+int main(int argc, char **argv) 
 {
     // 1. Initialize environment
     // 2. Set problems dimensions
@@ -40,7 +41,7 @@ int main(int argc, char** argv)
 
     N_Vector y = NULL;
     N_Vector yout = NULL;
-    void* cvode_mem = NULL;
+    void *cvode_mem = NULL;
     SUNMatrix J;
     SUNLinearSolver LS;
     
@@ -49,6 +50,11 @@ int main(int argc, char** argv)
     yout = N_VNew_Serial(2);
     NV_Ith_S(y, 0) = theta0;
     NV_Ith_S(y, 1) = 1;
+    float *my_data;
+    my_data = malloc (3 * sizeof (float));
+    my_data[0] = 2;
+    my_data[1] = 1.0;
+    my_data[2] = 2.0;
 
 
     // 4. Create CVODE object
@@ -104,6 +110,13 @@ int main(int argc, char** argv)
         return -1;
     }
     
+    // 11. Set optional inputs
+    flag = CVodeSetUserData(cvode_mem, my_data);
+    if (flag < 0)
+    {
+        fprintf(stderr, "Error in CVodeSetUserData.\n");
+        return -1;
+    }
 
     // In loop, call CVode, print results and test for error.
     for (k = 1; k < 10; ++k) {
@@ -115,8 +128,8 @@ int main(int argc, char** argv)
         }
         printf("%g %.16e %.16e\n", t, NV_Ith_S(yout, 0), 
                 NV_Ith_S(yout, 1));
-        printf("exp(%.3f) = %.3f\n\n", t, exp (t));
-        
+        printf("exp(%.3f) = %.3f\n", t, exp (t));
+        printf("exp(%.3f) = %.3f\n\n", 2 * t, exp (2 * t));
     }
 
     // Free all memory used
