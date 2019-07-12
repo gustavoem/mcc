@@ -27,15 +27,16 @@ print(y)
 # We need to replace the use of y0, y1 with the elements of our matrix
 # symbol. 
 state_array_map = dict(zip(states, y))
-print(state_array_map)
+# print(state_array_map)
 
 rhs_of_odes_idxed = rhs_of_odes.xreplace(state_array_map)
 [(cf, cs), (hf, hs)] = codegen(('c_odes', rhs_of_odes_idxed), \
         language='c')
-print(cs)
+# print(cs)
 
 dY = sym.MatrixSymbol('dY', *y.shape)
 ode_eq = sym.Eq(dY, rhs_of_odes_idxed)
-[(cf, cs), (hf, hs)] = codegen(('c_odes', ode_eq), \
-        language='c')
-print(cs)
+# [(cf, cs), (hf, hs)] = codegen(('c_odes', ode_eq), language='c')
+# print(cs)
+
+codegen(('c_odes', ode_eq), language='c', to_files=True)
