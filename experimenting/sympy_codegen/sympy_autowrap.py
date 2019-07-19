@@ -8,9 +8,13 @@ from sympy.utilities.autowrap import autowrap
 
 y = sym.MatrixSymbol('y', *states.shape)
 state_array_map = dict(zip(states, y))
+print (rhs_of_odes)
+print (state_array_map)
 rhs_of_odes_idxed = rhs_of_odes.xreplace(state_array_map)
+print (rhs_of_odes_idxed)
 dY = sym.MatrixSymbol('dY', *y.shape)
 ode_eq = sym.Eq(dY, rhs_of_odes_idxed)
+# print (ode_eq)
 auto_odes = autowrap(ode_eq, backend='cython', tempdir='./autowraptmp')
 
 def auto_odes_wrapper(y, t):
