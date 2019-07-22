@@ -1,4 +1,7 @@
-all_workers=(tolstoi lowe)
+readarray -t all_workers < servers_list.txt
+echo "${all_workers[@]}"
+
+
 host=${all_workers[@]:0:1}
 slaves=${all_workers[@]:1}
 ray_path=/home/gestrela/signetms_env/bin/ray
@@ -9,7 +12,7 @@ redis_server_line=$(echo $ray_out | grep -oP '\s+ray start --redis-address \d+\.
 redis_server_ip=$(echo $redis_server_line | grep -oP '\d+\.\d+\.\d+\.\d+:\d+')
 echo "Starting redis server with ip: $redis_server_ip"
 
-for worker in $slaves
+for worker in "${slaves[@]}"
 do
     ray_out=$(ssh $worker $ray_path start --redis-address=$redis_server_ip)
     echo "Started ray on $worker"
