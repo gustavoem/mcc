@@ -1,8 +1,10 @@
 import ray
 import time
+import sys
 
-ray.init()
+redis_ip = sys.argv[1]
 
+ray.init(redis_address=redis_ip)
 @ray.remote
 def add(x, y):
     time.sleep(1)
@@ -16,6 +18,12 @@ print(some_sum)
 
 while len(values) > 1:
     values = values[2:] + [add.remote(values[0], values[1])] 
+
+resources = ray.get_resource_ids()
+print("Resources:", resources)
+
+nodes = ray.nodes()
+print("Nodes:", nodes)
 
 total = ray.get(values[0])
 print(total)

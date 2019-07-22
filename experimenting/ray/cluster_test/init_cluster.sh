@@ -14,3 +14,7 @@ do
     ray_out=$(ssh $worker $ray_path start --redis-address=$redis_server_ip)
     echo "Started ray on $worker"
 done
+
+echo "Redis has been started on address: $redis_server_ip. Please
+provide this address to your ray application."
+
