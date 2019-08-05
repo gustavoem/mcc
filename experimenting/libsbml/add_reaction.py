@@ -9,15 +9,17 @@ def get_sbml_namespaces(model):
     return namespaces
 
 
-def find_sbml_species(model, species_name):
-    all_species = model.getListOfSpeciesTypes()
-    for species in all_species:
-        if species.getId == species_name:
-            return species
+def find_sbml_species_ref(model, species_id):
+    # all_species = model.getListOfSpecies()
+    # for species in all_species:
+        # if species_ref.getId() == species_name:
+    species_ref = model.getSpeciesReference(species_id) 
+    return species_ref
 
 
-def create_reaction(model, namespace):
-    reaction = Reaction(namespace)
+def add_reaction(model, namespace):
+    # reaction = Reaction(namespace)
+    reaction = model.createReaction()
     reactants = ['RAF_P']
     products = ['RAF']
     kineticlaw_str = 'V * RAF_P / (Km + RAF_P)'
@@ -25,21 +27,19 @@ def create_reaction(model, namespace):
     params_initialvalue = {'V': 1, 'Km': 1}
     
     for reactant in reactants:
-        reactant_species = find_sbml_species(model, reactant)
-        reaction.addReactant(reactant_species)
+        reactant_species_ref = find_sbml_species_ref(model, reactant)
+        reaction.addReactant(reactant_species_ref)
     for product in products:
-        product_species = find_sbml_species(model, reactant)
-        reaction.addProduct(product_species)
+        product_species_ref = find_sbml_species_ref(model, product)
+        reaction.addProduct(product_species_ref)
 
     kinetic_law = reaction.createKineticLaw()
     kinetic_law.setFormula(kineticlaw_str)
     for param in params_initialvalue:
-        param_obj = Parameter(namespace)
+        param_obj = kinetic_law.createParameter()
         param_obj.setName(param)
         param_obj.setId(param)
         param_obj.setValue(params_initialvalue[param])
-        kinetic_law.addParameter(param_obj)
-    print(reaction.getKineticLaw().getFormula())
     return reaction
 
 
@@ -48,19 +48,13 @@ sbmldoc = reader.readSBML("starting_model.sbml")
 if sbmldoc.getNumErrors() > 0:
     print("Oh... smth is wrong on the SBML.")
 
-
-converter = libsbml.SBMLFunctionDefinitionConverter()
-converter.setDocument(sbmldoc)
-converter.convert()
+# converter = libsbml.SBMLFunctionDefinitionConverter()
+# converter.setDocument(sbmldoc)
+# converter.convert()
 model = sbmldoc.model
 
 sbml_namespaces = get_sbml_namespaces(model)
-reaction = create_reaction(model, sbml_namespaces)
-
-print(model.addReaction(reaction))
-print(model)
-
-print(libsbml.LIBSBML_INVALID_OBJECT)
+add_reaction(model, sbml_namespaces)
 
 writer = libsbml.SBMLWriter()
 writer.writeSBML(sbmldoc, 'test.sbml')

@@ -178,6 +178,35 @@
           </listOfParameters>
         </kineticLaw>
       </reaction>
+      <reaction>
+        <listOfReactants>
+          <speciesReference species="RAF_P"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="RAF"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> V </ci>
+                <ci> RAF_P </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> Km </ci>
+                <ci> RAF_P </ci>
+              </apply>
+            </apply>
+          </math>
+          <listOfParameters>
+            <parameter id="V" name="V" value="1"/>
+            <parameter id="Km" name="Km" value="1"/>
+          </listOfParameters>
+        </kineticLaw>
+      </reaction>
     </listOfReactions>
   </model>
 </sbml>
