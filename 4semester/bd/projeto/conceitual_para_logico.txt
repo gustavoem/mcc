@@ -1,0 +1,32 @@
+Relacionamentos 1:N
+- INSTITUTO é dirigido por PESQUISADOR
+- LABORATORIO é chefiado por PESQUISADOR
+- PROJETO DE PESQUISA é financiado por AGENCIA DE FOMENTO
+- PESQUISADOR orienta ALUNO
+- INSTITUTO abriga LABORATÓRIO
+- MAPA DE VIA é criado por PESQUISADOR
+- MAPA DE VIA é versionamento de MAPA DE VIA
+- CELULA tem MAPA DE VIA
+- CELULA observada em EXPERIMENTO
+- REACAO QUIMICA tem CONSTANTE DE VELOCIDADE
+
+
+Relacionamentos M:N
+- LABORATORIO recebe PESQUISADOR
+- PESQUISADOR participa de PROJETO DE PESQUISA
+- PESQUISADOR desenha EXPERIMENTO
+- PESQUISADOR cria MODELO
+- ESPECIE QUIMICA participa MODELO 
+    (concentração inicial)
+- REAÇÃO QUIMICA envolve ESPÉCIE QUÍMICA
+    (função na reação: (reagente | produto | catalisador))
+- EXPERIMENTO possui ESPÉCIE QUÍMICA
+- REAÇÃO QUÍMICA compõe MAPA DE VIA
+- CONSTANTE DE VELOCIDADE é criada por MODELO
+    (distribuição a priori: string)
+- CONSTANTE DE VELOCIDADE é inferida por MODELO AJUSTADO
+    (amostra da distribuição a posteriori)
+
+
+Relacionamentos n-ários
+MODELO, MAPA DE VIA, EXPERIMENTO é modelado
