@@ -1,0 +1,139 @@
+Bancos de Dados de Grafos
+- BDs orientados a agregados -> grandes registros com conexões simples
+    -> motivado pelo uso de clusters 
+- BDs de grafos -> registros pequenos com interconexões complexas
+- modelo de dados geral: nós identificados (entidades) e arcos rotulados 
+(relacionamentos).
+- nós podem ter propriedades (valores simples ou objetos), geralmente
+sem esquema fixo.
+- dificuldade: precisamos de uma propriedade para um nó? ou devemos 
+simplesmente criar um novo nó com a propriedade?
+    -> decidimos de acordo com o uso dos dados modelados.
+- nós podem ter diferentes relacionamentos entre si
+- não há restrições quanto a quantidade de relacionamentos
+- percorrer os relacionamentos é uma operação bastante rápida
+    -> relacionamentos não precisam ser calculados no momento da 
+    consulta, eles já estão persistidos.
+
+Consultas em BDs de Grafos
+- consultas podem envolver:
+    -> condições sobre propriedades e rótulos
+    -> um único passo, expressões de caminho ou recursões completas
+    -> exemplo: "encontre os livros de categoria BD que foram escritos
+    por alguém que um amigo meu gosta.
+- no BD de grafos, o maior custo computacional da navegação pelos 
+relacionamentos fica na operação de inserção no BD.
+    -> esse custo vem da indexação dos nós
+    -> estratégia é vantajosa quando bom desempenho na consulta é o 
+    principal requisito.
+** existe uma linguagem declarativa para consulta em BDs de grafos.
+
+-> geralmente esses bds implementam, ACID, diferente dos agregados.
+-> geralmente são mantidos em uma única máquina.
+
+* São considerados NoSQL por
+-> não ser relacional
+-> apareceu na mesma época que os outros
+
+Exemplos: 
+- Neo4J
+- InfiniteGraph
+
+
+Bancos de Dados Schemaless
+- liberdade e flexibilidade
+-> a estrutura é alterada conforme ganha-se conhecimento sobre o projeto.
+-> pode-se deixar de armazenar determinado tipo de dados, sem perder 
+os dados do mesmo tipo que já estão no bd.
+-> 
+
+- esquema implícito embutido nas aplicações
+-> problema 1: necessidade de vasculhar códigos para entender o DB
+-> problema 2: SGBD não é ciente do esquema, e não pode fazer 
+otimizações epecíficas para o DB.
+-> problema 3: manutenção difícil quando múltiplas aplicações acessam o 
+BD.
+
+Note: dá pra matar esses problemas se você encapsular o banco com um 
+serviço.
+-> também podemos delinear as pates dos agregados que podem ser 
+acessadas por cada aplicação.
+
+
+Sistemas NoSQL - Modelos de Dados e Distribuição dos Dados
+Distribuição dos dados
+- modelo de dados orientado a agregados
+    -> se adequam bem ao escalonamento horizontal
+    -> unidade natural de distribuição de dados
+- benefício de se distribuir os dados
+    -> armazenamento de volumes maiores de dados
+    -> maior resiliência a falhas
+* custo: maior complexidade no gerenciamento dos dados.
+Importante: a menos que seja necessário, mantenha os dados em uma 
+máquina só.
+
+Modelos de distribuição
+- sharding (particionamento)
+    -> escalabilidade na escrita e leitura
+- replicação
+    -> escalabilidade apenas para leituras
+    -> dois modelos possíveis: mestre-escravo e peer-to-peer
+- sharding + replicação
+
+Sharding
+definição: colocar diferentes partes dos dados em diferentes máquinas.
+- cenário ideal: diferentes usuários se comunicando com nós diferentes.
+- cada usuário precisa acessar os dados de um único nó por operação.
+- carga de processamento balanceada entre os nós.
+- depende de:
+    -> boa modelagem dos agregados;
+    -> boa estratégia de distribuição dos dados.
+
+Sharding (distribuição)
+- por localidade
+    -> colocar agregados em nós que estão localizados próximos aos 
+    usuários mais frequentes.
+    -> na instanciação de VMs em nuvens públicas, é possível escolher a
+    região da máquina.
+- por carga
+    -> colocar nos nós volumes de dados ou de trabalho parecidos.
+- por tipo de acesso.
+
+Sharding (implementação)
+- historicamente, era da parte da lógica da aplicação
+    -> definição embutida no código
+- redirecionamento das consultas para os shards corretos
+-atualmente, muitos sistemas NoSQL oferecem a funcionalidade de 
+auto-sharding
+
+Sharding (resiliência)
+- quando usado sem replicação de dados, sharding costuma prover menos 
+resiliência do que um BD em um único servidor.
+- cluster costumam usar máquinas mais simples, mais propensas a falhas.
+- com um único servidor é mais fácil manter o BD no ar e funcionando.
+
+Replicação: distribuiçõa mestre-escravo
+- um nó é o mestre
+    -> fonte oficial dos dados, responsável por processar todas as 
+    escritas; ele é responsável por propagar a escrita aos escravos.
+- os demais são chamados de escravos
+    -> a leitura é feita direto nos escravos.
+- provê escalabilidade para BDs intensivos em operações de leituras.
+    -> podemos conseguir consistência forte.
+- nesse modelo temos resiliência pra leitura (se um falhar, tem outro).
+
+Replicação (peer-to-peer)
+- todos os nós processam operações de leitura e escrita
+    -> a falha de um nó não impede a realização de nenhum tipo de 
+    operação.
+- estratégias pra lidar com conflitos do tipo escrita-escrita
+    -> coordenar as escritas por meio de comunicação entre os nós de 
+    réplicas, para evitar conflitos.
+        - custo: alto trafego
+        - beneficio: forte consistencia
+        - obs: nem todas replicas precisam concordar com uma escrita, apenas
+        uma maioria delas.
+    -> não evitar conflitos
+        -custo: risco de inconsistencia
+        - beneficio: melhor desempenho
+

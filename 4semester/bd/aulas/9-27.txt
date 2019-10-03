@@ -1,0 +1,75 @@
+Agregados
+- facilitam o funcionamento dos sistemas NoSQL em clusters.
+    -> deseja-se minimizar os números de nós que precisam ser acessados 
+    para se responder uma consulta
+- também facilitam a vida dos programadores, já que eles tem uma 
+estrutura mais próxima da dos objetos de dados em memória manipulados
+nas aplicações
+
+
+Exemplo: e-commerce
+Necessidade de armazenar dados de:
+clientes, catalogo de produtos
+pedidos
+endereços de entrega
+...
+
+
+Usamos agregação para evitar fazer junções, conseguindo os dados em
+uma tacada só.
+
+
+"Contras" dos agregados
+- não há conceito de chave estrangeira
+- um sistema NoSQL não consegue usar a estrutura interna do agreagdo 
+para ajudar nas decisões de relacionamento
+- geralmente, nos sistemas NoSQL não é possível manipular múltiplos
+agregados de forma atômica
+- o agregado não representa uma organização lógica "intrínseca" dos
+dados; apenas a forma como aplicações acessam os dados.
+-> se vamos acessar os dados de várias formas, talvez seja melhor usar
+uma lógica tradicional (como no modelo relacional).
+
+
+Bancos de dados tipo chave-valor e documentos
+- fortemente baseados na ideia de agregados
+- cada agregado tem uma chave (ou ID), usada na recuperação dos dados
+- Diferença
+    -> BD chave-valor: os agregados são "opacos", conseguimos apenas 
+    referenciar por ID
+    -> BD de documentos: o BD pode "enxengar" a estrutura dos agregados.
+
+
+Bancos de dados chave-valor
+operações
+insert(chave, valor)
+fetch(chave)
+update(chave, valor)
+delete(chave)
+
+
+Bancos de dados de documentos
+operações
+insert(chave, documento)
+fetch(chave)
+delete(chave)
+update(chave, documento)
+- também fazem fetch de documentos buscando pelos seus conteúdos
+    - essa funcionalidade depende da implementação
+- geralmente não implementam bloqueios explícitos
+    - consequência: consistência mais fraca
+    - pq "mais" fraca? porque no chave-valor o conteúdo é opaco, então
+    as coisas dependem menos do conteudo do valor (tipo, não tem 
+    queries que olham pra valor de atributos.)
+
+Bancos de dados de famílias de colunas
+* ideia de familias de colunas
+-> as famílias sao usadas como unidades de distribuição de dados
+Bds de famílias de colunas armazenam dados como linhas, onde cada linha 
+possui uma chave e muitas (uma família) colunas
+-> uma coluna pode ser uma supercoluna
+
+Agregados e Relacionamentos
+Problema 1: nem todo sistema NoSQL tem funcionalidades para tratar links
+entre agregados
+Problema 2: tratamento das alterações
