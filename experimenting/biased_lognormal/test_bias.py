@@ -3,100 +3,43 @@ import scipy
 import statistics
 import numpy as np
 
-def get_underlying_normal_params(mu, s2):
-    mu2 = mu * mu
-    nrm_mean = np.log(mu2 / np.sqrt(s2 + mu2))
-    nrm_s2 = np.log((s2 + mu2) / mu2)
-    return nrm_mean, nrm_s2
+def get_underlying_normal_params(m, v):
+    m2 = m * m
+    nrm_mean = 1.5 * np.log(m2) - .5 * (np.log(m2) + np.log(v + m2))
+    nrm_mean = 1.5 * np.log(m2) - .5 * (np.log(m2 * (v + m2)))
+    print ("v = ", v)
+    print ("m2 = ", m2)
+    print ("v + m2 = ", v + m2)
+    print ("(v + m2) / m2 = ", ((v + m2) / m2))
+    print ("m2 / sqrt(v + m2)", m2 / np.sqrt(v + m2))
+    nrm_var = np.log(v / m2 + 1)
+    return nrm_mean, nrm_var
 
+def get_scipy_log_params(m, v):
+    s = np.sqrt(np.log(.5 * (np.sqrt(4 * v + 1) + 1)))
+    loc =  m - lognorm.mean(s)
+    return loc, s
 
-lognrm_mean = 1e-5
+lognrm_mean = 1e-3
 lognrm_var = 10
-norm_mean, norm_var = get_underlying_normal_params(lognrm_mean, \
-        lognrm_var)
-print("norm_mu = ", norm_mean)
-print("norm_var = ", norm_var)
-sample = [lognorm.rvs(scale=np.exp(norm_mean), s=np.sqrt(norm_var)) \
-        for _ in range(50000)]
-print("Sample mean: ", statistics.mean(sample))
-print("Sample variance: ", statistics.variance(sample))
-
-log_sample = np.log(sample)
-est_mu = statistics.mean(log_sample)
-est_var = statistics.variance(log_sample)
-print("Estimated mu = ", est_mu)
-print("Estimated var = ", est_var)
-
-sampletimes100 = np.array(sample) * 10000
-print("sample_variance = ", statistics.variance(sampletimes100) / 1e8)
-
-
-lognrm_mean = np.longdouble(1e-5)
-lognrm_var = np.longdouble(10)
-norm_mean, norm_var = get_underlying_normal_params(lognrm_mean, \
-        lognrm_var)
-print(norm_mean, norm_var)
-sample = [lognorm.rvs(scale=np.exp(norm_mean), s=np.sqrt(norm_var)) \
-    for _ in range(50000)]
-
-mean = 0
-for val in sample:
-    mean += val
-mean /= len(sample)
-
-var = 0
-for val in sample:
-    var += (val - mean) ** 2
-var /= len(sample)
-print ("Sample mean: ", mean)
-print ("Sample variance: ", var)
-
-
-lognrm_mean = 1e-5
-lognrm_var = 10
-norm_mean, norm_var = get_underlying_normal_params(lognrm_mean, \
-        lognrm_var)
-# This time, instead of sampling from X ~ Lognormal (mu, s2), we'll
-# sample from Y = 1 / X ~ Lognormal (-mu, s2)
-sample = [lognorm.rvs(scale=np.exp(-norm_mean), s=np.sqrt(norm_var)) \
-        for _ in range(50000)]
-sample = np.array (sample)
-sample = 1 / sample
-print("Sample mean: ", statistics.mean(sample))
-print("Sample variance: ", statistics.variance(sample))
-
-
-lognrm_mean = 1e-5
-lognrm_var = 10
-norm_mean, norm_var = get_underlying_normal_params(lognrm_mean, \
-        lognrm_var)
-# This time, instead of sampling from X ~ Lognormal (mu, s2), we'll
-# sample from Y ~ Lognormal (0, s2) then X = Y / exp (mu)
-sample = [lognorm.rvs(scale=1, s=np.sqrt(norm_var)) \
-        for _ in range(50000)]
-sample = np.array (sample)
-sample *= np.exp (norm_mean)
-print("Sample mean: ", statistics.mean(sample))
-print("Sample variance: ", statistics.variance(sample))
-
-
-
-# lognrm_mean = 3
-# lognrm_var = 10
-# norm_mean, norm_var = get_underlying_normal_params(lognrm_mean, \
-        # lognrm_var)
+norm_params = get_underlying_normal_params(lognrm_mean, lognrm_var)
+print("Calculated normal params, mu and sigma^2: ", norm_params)
+# norm_mean = norm_params[0]
+# norm_var = norm_params[1]
 # sample = [lognorm.rvs(scale=np.exp(norm_mean), s=np.sqrt(norm_var)) \
         # for _ in range(50000)]
-# print ("Sample mean: ", statistics.mean(sample))
-# print ("Sample variance: ", statistics.variance(sample))
+# print("Sample mean: ", statistics.mean(sample))
+# print("Sample variance: ", statistics.variance(sample))
 
+lognrm_mean = 1e-3
+lognrm_var = 10
+loc, s = get_scipy_log_params(lognrm_mean, lognrm_var)
+print("Calculated scipy params, loca and s: ", loc, s)
+sample = [lognorm.rvs(s, loc=loc) for _ in range(50000)]
+for t in sample:
+    if t < 0:
+        print("oh no")
+print("Sample mean: ", statistics.mean(sample))
+print("Sample variance: ", statistics.variance(sample))
 
-
-# lognrm_mean = 1
-# lognrm_var = 5
-# norm_mean, norm_var = get_underlying_normal_params(lognrm_mean, \
-        # lognrm_var)
-# sample = [lognorm.rvs(scale=np.exp(norm_mean), s=np.sqrt(norm_var)) \
-        # for _ in range(50000)]
-# print ("Sample mean: ", statistics.mean(sample))
-# print ("Sample variance: ", statistics.variance(sample))
+# print(lognorm.pdf(-0.2,s, loc=loc))
