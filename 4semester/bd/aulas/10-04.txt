@@ -1,0 +1,67 @@
+Uso combinado de Sharding e replicação
+- fator de replicação 3: não é atoa, tem um estudo que mostra que isso é
+bom, existe então uma boa tolerância a falhas.
+
+Sistemas NoSQL - mais detalhes sobre consistência
+Consistência em operações de alteração
+- o conflito é geralmente na modificação de algo que já existe.
+- duas estratégias para lidar com conflitos escrita-escrita
+    -> pessimista: evitar conflito ---> bloqueio
+    -> otimista: deixa rolar e detecta o conflito quando acontece.
+        * detectando: só modifica se o dado não foi alterado desde 
+        quando ele foi lido.
+- essas estratégias parecem fáceis quando temos a 'entrada' do SGBD em 
+uma única máquina (tipo mestre-escravo), mas e num esquema peer-to-peer.
+--> esse esquema otimista dá ruim quando temos várias máquinas. 
+
+Consistência em operações de alteração
+os exemplos citados acima dependem de uma *seriação* das modificações.
+- outro exemplo de estratégia otimista
+    -> primeiro salvar todas as modificações conflitantes e registrar 
+    que elas estão em conflito.
+    -> o merge vai ser resolvido pelo cliente do BD, porque não dá pra
+    adivinhar pois depende do domínio.
+
+Consistência em operações de leitura
+- consistência lógica: exemplo do cliente que mudou o pedido e do 
+carteiro que leu a encomenda antiga.
+- inconsistência de replicação: causado pela inconsistência na 
+replicação, ué, claro.
+- consistência de replicação: garantia que um mesmo item de dados terá
+o mesmo valor quando lido de diferentes réplicas
+
+Consistência "leia-suas-escritas" (consistência de sessão)
+- quando um usuário faz uma transação, ele quer ler a informação que ele
+atualizou.
+- técnicas para implementar consistência de sessão:
+    -> amarrar cada sessão a um único nó.
+        * pode atrapalhar o balanceamento de carga
+        * mais difícil de ser feita com replicação mestre-escravo.
+            ** amarra o cara que escreveu com o mestre (único que pode 
+            escrever)
+    -> usar carimbo de versão
+        * o sgbd tem que dar uma versão igual ou mais nova que a do 
+        usuário
+    
+Relaxando a consistência
+- Teorema CAP.
+    -> consistency, availability, partition tolerance
+- availability - tem um significado "toda requisição recebida por um nó 
+operante no sistema precisa resultar em uma resposta."
+    -> portanto, um nó falho não indica falta de disponibilidade CAP.
+- para garantir um cluster CA, é preciso garantir que o sistema fique
+totalmente fora do ar em uma falha de partição
+- oxe, mas se você quiser particionamento, vai ter que relaxar CA.
+
+Relaxando a consistência
+
+
+Relaxando a durabilidade
+- garantir que os dados estarão lá pra sempre uma vez que foram 
+escritos (e não modificados, ué)?
+- como relaxar?
+    -> escreve na memória antes, perder perdeu.
+
+
+Consistência por meio de quóruns
+
