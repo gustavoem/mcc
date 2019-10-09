@@ -1,0 +1,132 @@
+Bancos de Dados Ativos
+-> permitem colocar um comportamento reativo de um banco de dados
+-> facilita a criação e execução de regras de produção que seguem o
+paradigma ECA
+-> ECA = Evento-Condição-Ação
+-> Regras ECA reagem de forma autônoma a eventos que ocorrem sobre os
+dados
+
+Regras Ativas
+- motor de regras ativas
+    * faz o processamento de regras
+    * monitora eventos causados por transações no banco de dados
+
+Regras semânticas das aplilcações
+- conseguimos colocar regras do negócio usando o próprio SGBD. Isso dá 
+as aplicações uma nova dimensão de independência -> a independência de 
+conhecimento(?)
+- quando colocamos a regra dentro do SGBD garantimos que todos usuários
+serão submetidos a essas regras
+- muitos SGBDRs possuem funcionalidades relacionadas a criação e 
+execução de regras ativas.
+    * embora padronizado no SQL (since 99), ainda há muita variação
+    na sintaxe e forma de implementação.
+
+Regras ativas
+- semântica 
+    * quando evento ocorre, se a confição é satisfeita, então execute 
+    ação
+- exemplo no STARBUST
+    CREATE RULE ... ON ...
+    WHEN INSERTED, DELETED, UPDATED (...)
+    IF ...
+    THEN UPDATE ...
+        SET ... = ...
+- dizemos que uma regra ativa é:
+    * diparada - quando evento de interesse acontece
+    * considerada - quando a condição é avaliada
+    * executada
+
+Sistemas de banco de dados ativo
+- Um sistema desses deve permitir
+    * criação de regras
+    * desativação de regras
+    * ativação de regras
+    * o disparo ~manual~ das regras
+
+Componentes de uma regra ativa
+- eventos: são primitivas para mudanças de estado em BDs. Alguns 
+sistemas também podem monitorar:
+    * em consultas
+    * a eventos temporais
+    * eventos externos, gerados explicitamente por aplicações
+- condição
+    * um predicado
+    * uma consulta: se o resultado é vazio, então False, True otherwise
+- ação
+    * ter comando transacionais
+    * ...
+
+Sobre os eventos monitorados
+- regra é disparada quando qualquer um dos eventos monitorados acontece
+- na ação, podemos identificar qual evento que disparou a regra
+- alugns sistemas suportam linguagens de ventos bem ricas, top
+    ** complex even processing 
+
+Momentos de consideração de uma regra ativa
+Se refere ao momento em que a regra será ativada em relação a transação
+que levou a sua ativação
+- consideração imediata: a condição é avaliada como parte da mesma 
+transação do evento de disparo. Três tipos:
+    * fazer a consideração antes da transação de ativação
+    * fazer a consideração depois da transação de ativação
+    * fazer a consideração no lugar da transação de ativação
+- consideração postergada
+- consideração separada
+    * a considereção é vista como uma transação separada
+
+Momento da execução da ação de uma regra ativa
+- execução imediata: imediatamente depois da consideração da condição
+- execução postergada: posterga a execução da ação até o final da 
+transação
+- execução separada: ocorre no contexto de uma transação separada
+* normalmente deixa-se a execução imediata e a de consideração a escolha
+do usuário
+
+Momentos de consideração e execução
+- Oracle: usa consideração imediata (mas deixa projetista escolher antes
+ou depois que o evento de disparo seja disparado) e execução imediata
+
+Monitoramento das mudanças do estado do DB
+- nível de linha: consideram mudanças que afetam linhas individuais
+dentro da tabela.
+- nível de comando: consideram como eventos as instruções de manipulação 
+dos dados.
+
+Conjunto de conflito
+alguns eventos podem disparar mais de uma regra...
+- qual a ordem das regras serão executadas?
+    * alguns deixam o usuário escolher uma ordem, total ou parcial 
+    * outros usam estratégias internas pra decidir isso
+
+Sobre a priorização das regras
+- cada sistema possui um esquema próprio para priorização das regras
+
+BDs Ativos - Aplicações "internas" ao BD
+- usa-se regras ativas para implementar funcionalidades clássicas do
+gerenciamento de bds, como:
+    * manutenção de integridade
+    * manutenção de dados derivados
+    * gerenciamento de replicação
+- outras aplicações internas
+    * manutenção de versões
+    * administração de segurança
+    * logging
+
+BDs Ativos - Aplicações "externas" ao BD
+- implementa regras.
+    * exemplo: julgar o pedido de crédito  do cliente
+
+Triggers no padrão SQL3
+** instead of é usado com visões, quando fazemos operações em visões
+** as vezes, por razão de segurança, alguns usuários tem acesso apenas
+a visões.
+1. ação pode ser executada antes (BEFORE), depoi (AFTER) ou no lugar
+(INSTEAD OF) do evento que disparou a regra
+2. ação pode referenciar tanto os valores antigos quanto os novos 
+valores das tuplas que
+
+o comando para definição de triggers do SQL oferece diferentes opções
+para o projetista
+    * podemos especificar o trigger no nível de tupla ou comando
+    
