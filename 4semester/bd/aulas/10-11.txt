@@ -1,0 +1,77 @@
+Sistemas de Bancos de Dados Dedutivos
+
+Sistema de banco de dados dedutivo
+- consultas e visões na linguagem SQL podem ser entenida como regras do 
+tipo se-então.
+- em sistemas dedutivos, regras podem ser definidas de maneira 
+recursiva.
+- um sistema dedutivo possui uma máquina de inferência que pode deduzir
+fatos novos do BD
+- o modelo usado em BDs dedutivos relaciona-se ao cálculo relacional
+de domínio e à Prolog.
+- Datalog: variação da Prolog, usada para definir regras de modo 
+declarativo em Bds dedutivos.
+- tipos principais de especificação em um BD dedutivo:
+    -> fatos, se assemelham à especificações de relações. Em um bd 
+    dedutivo, o valor de um atributo é determinado pela sua posição.
+    -> regras, se assemelham a visões relacionais, uma relação virtual.
+
+Notação Prolog/Datalog
+- Predicado: tem um nome, um significado implícito e um número fixo
+de argumentos
+- quando um predicado tem variáveis como argumentos, então ele expressa 
+uma consulta, ou é parte de uma regra.
+- convenção (também usada na Prolog)
+    * valores constantes são números ou cadeias de caracteres
+    * nomes de variáveis começam com letra maíuscula
+    * nomes de constantes começam com letra minúscula
+- regra: cabeça :- corpo (lemos como sse este símbolo)
+- o corpo é definido por um ou mais predicados
+
+Predicados embutidos
+- são aqueles que estão builtin, como =(X, Y) ou >(X, Y) ...
+
+Programas em Datalog
+- são construidos a partir de fórmulas atômicas (ou átomos)
+- uma fórmula atomica é um literal p(a1, ..., an)
+
+Forma clausular
+- se é composta por uma śerie de cláusula. disjunção de literais
+- conjunção de cláusulas
+-> cláusula = disjunção de literais positivos ou neg
+
+Cláusula de Horn
+- no máximo um literal positivo
+
+Consulta em Datalog
+- um conjunto de regras
+- um literal P(X1, ..., Xn) onde cada Xi é uma variável ou constante
+
+Interpretação de regras
+- interpretação teórica de prova
+    -> usa os axiomas pra tentar provar
+- interpretação teórica de modelo
+    -> 
+
+Predicados extensionais x intencionais
+- extensionais: cujas relações estão armazenadas em um bd
+- intencionais: 
+
+Segurança de programas Datalog
+- um programa ou regra é considerado seguro se gerar um conjunto finito
+de fatos.
+exemplo de problema
+    salario_alto(Y) :- Y > 2000
+seria certo
+    SALARIO_ALTO(Y) :- FUNCIONARIO(X), SALARIO(X,Y), Y > 20000
+
+Formalizando o conceito de segurança
+- uma variável X é limitada em uma regra se:
+    * ela aparece em um predicado regular positivo no corpo da regra
+    * ela aparecer em um predicado X = c ou c = X ou  
+    (c1 <= X e c2 >= X) no corpo da regra
+
+Da álgebra relacional para Datalog
+Intersecção
+    Rel_intersecção(X, Y, Z) :- REL_UM(X, Y, Z), REL_DOIS(X, Y, Z)
+    
