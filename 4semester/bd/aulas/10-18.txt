@@ -1,0 +1,100 @@
+Bancos de dados Dedutivos - continuação
+
+Negação em regras recursivas
+exemplo de negação + recursão segura
+UA_ALCANCA(X, Y) |- VOOS(ua, X, Y, P, C)
+UA_ALCANCA(X, Y) |- UA_ALCANCA(X, Z) AND UA_ALCANCA(Z, Y)
+...
+UA_ALCANCA(X, Y) AND NOT AA_ALCANCA(X, Y)
+
+* você pode acabar fazendo uma consulta que não tem uma resposta, ou que
+tem mais de uma que são inconsistentes
+
+R = {0}
+P |- R AND NOT Q
+Q |- R AND NOT P
+possível resposta: Q = {0} and P = \emptyset
+                   P = {0} and Q = \emptyset
+
+
+Uma regra recursiva e negada é segura sse for estratificada
+Começamos calculando o estrato dos nós
+Como calcula o estrato do nó?
+-> olhamos o maior caminho (caminho com maior número de arcos 
+negativos) partindo do nó. isso dá o estrato do nó.
+-> a regra é não segura se houver um ciclo no grafo dos estratos que 
+contenha um ou mais arcos negativos.
+-> se a recursão é estratificada, conseguimos calcular a relação nas
+ordem de seus estratos.
+
+Consultas SQL recursivas
+* WITH RECURSIVE t(n) AS ( ... )
+exemplo: alcanca
+with recursive alcaca(de, para) as (
+    (select de, para from voos)
+    UNION
+    (select R1.de, R2.para 
+    from Alcanca as R1, Alcanca as R2
+    where R1.para = R2.de)
+)
+select * from Alcanca;
+
+na implementação do SQL você não pode referenciar duas vezes uma relação
+na definição recursiva
+
+Expressões problemáticas em consultas SQL recursivas
+WITH
+    RECURSIVE P(x) AS (
+        (SELECT * FROM R)
+        UNION
+        (SELECT * FROM Q)
+    ),
+    
+    RECURSIVE Q(x) AS
+        SELECT SUM(x) from P
+
+------------------------------------------------------------------------
+
+
+Problemas em escala da web
+- características
+    * definitivamente data-intensive
+    * podem ser processing-intensive também
+- exemplos:
+    * crawling, pesquisa em biologia computacional, processamento de
+    dados científicos, redes de sensores, aplicaçòes web 2.0, etc.
+
+Como resolver esses problemas?
+- dividir e conquistarr
+
+Ideias principais
+- escalabilidade horizontal ao invés de escalabilidade vertical
+- mover os processos para perto dos dados
+- processar os dados sequencialmente, ao invés de padrões de acesso
+aleatório.
+    -> seeks são custosos, mas a vazão (throughput) do disco é razoável.
+
+Paradigma MapReduce
+- exemplo clássico: contagem de palavras
+
+
+Modelo de programação paralela mapreduce
+O modelo inicial proposto pelo Google simplifica alguns problemas
+- usa aglomerado de máquinas comuns
+- faz paralelização distribuida automatica de forma mais simples 
+possível
+- o sistema de execução se encarrega de:
+    -> particionamento e distrib. dos dados
+    -> escalonamento das execuções no aglomerado de máquinas
+    -> tratamento de falhas
+    -> gerenciamento da comunicação entre as máquinas
+
+Mapreduce
+- implementação free software: Hadoop
+- cat     | grep | sort    | uniq > arquivo
+- entrada | map  | shuffle | reduce > saída
+
+Apache Hadoop
+- Hadoop reomve a complexidade da computação de alto desempenho
+
+
