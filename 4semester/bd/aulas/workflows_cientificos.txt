@@ -1,0 +1,68 @@
+Instanciação de workflows científicos
+- preparaç~ao para execução do workflow:
+    - cada nova execução requer dados de entrada e parâmetros de confg.
+- pode haver alocação de recursos automática
+
+A execução de workflows científicos
+- ocorre nos recursos alocados
+    - atividades processam dados de entrada e produzem novos dados
+- pode registrar dados intermediários
+
+Análise pós-execução do workflow científico
+- inspeção e interpretação dos dados obtidos
+- revisão de hipótese ou confirmação
+
+
+Modelagem de workflows científicos
+
+Terminologia básica
+- modelo: define atividades a serem realizadas no workflow para que um
+  objetivo científico seja alcançado.
+- atividade: é uma unidade atômica de trabalho em um modelo de workflow.
+- conector: é usado para definir alguma relação de precedência ou algum
+  tipo de transferência de dados entre atividades.
+- instância : uma execução particular
+
+Modelo de workflow
+- esteabelece a ordem de atividades
+- pode usar um arcabouço formal ou linguagem de especificação de
+  workflow.
+
+Atividade
+- unidade atômica de trabalho
+- pode ser:
+    - manual
+    - automática
+    - semiautomática
+
+Conector
+- define alguma relação de precedência ou algum tipo de transferência de
+  dados entre atividades
+
+Instcia de workflow
+- execuão particula de um modelo de workflow
+
+Workflow de negócio x científicos
+- Workflow de negócio
+    - automatizam processo industriais e gerenciais
+    - desenvolvimento apoiado por comunidades e coalizões, envolvendo
+      indústria e academia
+- Workflow científico
+    - similar ao de negócios
+    - a comunidade científica não adotou os padrões desenvolvidos para
+      os worflows de negócios.
+
+
+Padronização e interoperabilidade
+- W. de negócio
+    - processos inter-organizacionais
+    - demandam interoperabilidade de ferramentas e padronização
+- W. científicos
+    - não existem padrões
+    - pouca interoperabilidade
+
+Perspectivas para a modelagem de workflows científicos
+- fluxo de controle: descreve a ordem de execução
+- fluxo de dados: descreve as tranferências de dados entre as atividades
+
+
